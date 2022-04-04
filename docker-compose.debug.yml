@@ -13,7 +13,7 @@ services:
     ports:
       - "8000:8000"
     env_file:
-      - ./server/.env
+      - ./.env
     networks:
       - django-auth-api
     restart: unless-stopped
