@@ -35,3 +35,19 @@ class RegisterView(CreateAPIView):
             user_data = serializer.data
             
             return Response({'message': 'User created successfully', 'data': user_data}, status=status.HTTP_201_CREATED)
+        
+class LoginView(TokenObtainPairView):
+    serializer_class = LoginSerializerWithToken
+    
+    def post(self, request):
+        data = request.data
+        try:
+            serializer = self.serializer_class(data=data)
+            if serializer.is_valid(raise_exception=True):
+                return Response({'message': 'User logged in sucessfully', 'data': serializer.validated_data}, status=status.HTTP_200_OK)
+        
+        except CustomUser.DoesNotExist as e:
+            return Response({'message': 'User does not exist'}, status=status.HTTP_400_BAD_REQUEST)
+        
+        except Exception as e:
+            return Response({'message': 'Invalid email or password'}, status=status.HTTP_400_BAD_REQUEST)
