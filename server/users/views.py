@@ -17,7 +17,7 @@ from rest_framework_simplejwt.views import TokenObtainPairView
 from drf_yasg.utils import swagger_auto_schema
 from drf_yasg import openapi
 
-from .serializers import RegisterSerializer, LoginSerializerWithToken
+from .serializers import RegisterSerializer, LoginSerializerWithToken, UserSerializer
 from .models import CustomUser, Interests
 
 # Create your views here.
@@ -63,6 +63,21 @@ def logout(request):
     
     except TokenError as identifier:
         return Response({'message': 'Invalid or Expired Token'}, status=status.HTTP_400_BAD_REQUEST)
+    
+    except Exception as e:
+        return Response({'message': 'Something went wrong'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+    
+@api_view(['GET'])
+def get_users(request):
+    query = request.query_params.get('q') or ''
+    try:
+        users = CustomUser.objects.filter(username__icontains=query)
+        serializer = UserSerializer(users, many=True)
+        
+        return Response({'message': 'Users found', 'data': serializer.data}, status=status.HTTP_200_OK)
+    
+    except CustomUser.DoesNotExist as e:
+        return Response({'message': 'User does not exist'}, status=status.HTTP_400_BAD_REQUEST)
     
     except Exception as e:
         return Response({'message': 'Something went wrong'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
