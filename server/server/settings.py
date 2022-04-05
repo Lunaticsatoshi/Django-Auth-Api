@@ -51,6 +51,7 @@ INSTALLED_APPS = [
     'reset_migrations',
     
     'users.apps.UsersConfig',
+    'posts.apps.PostsConfig',
 ]
 
 MIDDLEWARE = [
