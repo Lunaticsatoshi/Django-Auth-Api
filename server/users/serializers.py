@@ -39,3 +39,71 @@ class RegisterSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         return CustomUser.objects.create_user(**validated_data)
+    
+class LoginSerializerWithToken(TokenObtainPairSerializer):
+        
+    @classmethod
+    def get_token(cls, user):
+        token = super().get_token(user)
+        token['username'] = user.username
+        token['is_staff'] = user.is_staff
+        token['id'] = user.id
+
+        return token
+    
+    def validate(self, attrs):
+        data = super().validate(attrs)
+
+        serializer = UserSerializerWithToken(self.user).data
+        for k, v in serializer.items():
+            data[k] = v
+
+        return data
+        
+class UserProfileSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = UserProfile
+        fields = '__all__'
+        
+class UserSerializer(serializers.ModelSerializer):
+    profile = serializers.SerializerMethodField(read_only=True)
+    class Meta:
+        model = CustomUser
+        fields = ['id', 'profile', 'username', 'email', 'is_superuser', 'is_staff']
+
+    def get_profile(self, obj):
+        profile = obj.userprofile
+        serializer = UserProfileSerializer(profile, many=False)
+        return serializer.data
+    
+class AuthUserSerializer(serializers.ModelSerializer):
+    profile = serializers.SerializerMethodField(read_only=True)
+    class Meta:
+        model = CustomUser
+        exclude = ['password', 'id']
+
+    def get_profile(self, obj):
+        profile = obj.userprofile
+        serializer = UserProfileSerializer(profile, many=False)
+        return serializer.data
+    
+class UserSerializerWithToken(UserSerializer):
+    access = serializers.SerializerMethodField(read_only=True)
+    refresh = serializers.SerializerMethodField(read_only=True)
+
+    class Meta:
+        model = CustomUser
+        exclude = ['password', 'id']
+
+    def get_access(self, obj):
+        token = RefreshToken.for_user(obj)
+
+        token['username'] = obj.username
+        token['profile_pic'] = obj.userprofile.profile_pic
+        token['is_staff'] = obj.is_staff
+        token['id'] = obj.id
+        return str(token.access_token)
+    
+    def get_refresh(self, obj):
+        token = RefreshToken.for_user(obj)
+        return str(token)
