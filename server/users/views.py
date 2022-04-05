@@ -81,3 +81,15 @@ def get_users(request):
     
     except Exception as e:
         return Response({'message': 'Something went wrong'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+    
+@api_view(['GET'])
+@permission_classes((IsAuthenticated,))
+def get_current_user(request):
+    user = request.user
+    print(user)
+    try:
+        serializer = UserSerializer(user, many=False)
+        return Response({'message': 'User found', 'data': serializer.data}, status=status.HTTP_200_OK)
+        
+    except Exception as e:
+        return Response({'message': 'Something went wrong'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
