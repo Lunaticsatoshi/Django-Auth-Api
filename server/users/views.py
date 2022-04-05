@@ -1,24 +1,15 @@
 from django.shortcuts import render
-from django.contrib.sites.shortcuts import get_current_site
-from django.urls import reverse
-from django.conf import settings
-from django.db.models import Q
-import jwt
 
 from rest_framework.response import Response
-from rest_framework.views import APIView
-from rest_framework.generics import CreateAPIView, UpdateAPIView
+from rest_framework.generics import CreateAPIView
 from rest_framework import status
 from rest_framework_simplejwt.tokens import RefreshToken, TokenError
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework_simplejwt.views import TokenObtainPairView
 
-from drf_yasg.utils import swagger_auto_schema
-from drf_yasg import openapi
-
 from .serializers import RegisterSerializer, LoginSerializerWithToken, UserSerializer
-from .models import CustomUser, Interests
+from .models import CustomUser
 
 # Create your views here.
 
