@@ -16,3 +16,13 @@ class Post(BaseModel):
     
     def __str__(self) -> str:
         return f"{self.id} | {self.title}"
+    
+class PostComment(BaseModel):
+    id = models.UUIDField(default=uuid.uuid4,  unique=True, primary_key=True, editable=False)
+    post = models.ForeignKey(Post, on_delete=models.CASCADE)
+    user = models.ForeignKey(CustomUser, on_delete=models.SET_NULL, null=True, blank=True)
+    parent = models.ForeignKey('self', on_delete=models.CASCADE, null=True, blank=True)
+    content = models.TextField(max_length=1000)
+    
+    def __str__(self) -> str:
+        return f"{self.id} | {self.user.username} | {self.content}"
