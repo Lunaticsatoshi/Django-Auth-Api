@@ -32,6 +32,8 @@ DEBUG = env.bool('DEBUG', default=True)
 
 ALLOWED_HOSTS = env.list('DJANGO_ALLOWED_HOSTS', default=['*'])
 
+AUTH_USER_MODEL = 'users.CustomUser'
+
 
 # Application definition
 
@@ -47,6 +49,8 @@ INSTALLED_APPS = [
     'drf_yasg',
     'corsheaders',
     'reset_migrations',
+    
+    'users.apps.UsersConfig',
 ]
 
 MIDDLEWARE = [
