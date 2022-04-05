@@ -113,7 +113,7 @@ else:
 
 REST_FRAMEWORK = {
     'NON_FIELD_ERRORS_KEY': 'error',
-    # 'EXCEPTION_HANDLER': 'api.middlewares.custom_exception_handler',
+    'EXCEPTION_HANDLER': 'api.middlewares.custom_exception_handler',
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_simplejwt.authentication.JWTAuthentication',
     ),
