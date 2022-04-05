@@ -60,32 +60,12 @@ class LoginSerializerWithToken(TokenObtainPairSerializer):
 
         return data
         
-class UserProfileSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = UserProfile
-        fields = '__all__'
-        
 class UserSerializer(serializers.ModelSerializer):
     profile = serializers.SerializerMethodField(read_only=True)
     class Meta:
         model = CustomUser
-        fields = ['id', 'profile', 'username', 'email', 'is_superuser', 'is_staff']
+        fields = ['id', 'username', 'email', 'is_superuser', 'is_staff']
 
-    def get_profile(self, obj):
-        profile = obj.userprofile
-        serializer = UserProfileSerializer(profile, many=False)
-        return serializer.data
-    
-class AuthUserSerializer(serializers.ModelSerializer):
-    profile = serializers.SerializerMethodField(read_only=True)
-    class Meta:
-        model = CustomUser
-        exclude = ['password', 'id']
-
-    def get_profile(self, obj):
-        profile = obj.userprofile
-        serializer = UserProfileSerializer(profile, many=False)
-        return serializer.data
     
 class UserSerializerWithToken(UserSerializer):
     access = serializers.SerializerMethodField(read_only=True)
