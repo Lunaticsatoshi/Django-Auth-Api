@@ -60,7 +60,6 @@ class LoginSerializerWithToken(TokenObtainPairSerializer):
         return data
         
 class UserSerializer(serializers.ModelSerializer):
-    profile = serializers.SerializerMethodField(read_only=True)
     class Meta:
         model = CustomUser
         fields = ['id', 'username', 'email', 'is_superuser', 'is_staff']
@@ -78,7 +77,6 @@ class UserSerializerWithToken(UserSerializer):
         token = RefreshToken.for_user(obj)
 
         token['username'] = obj.username
-        token['profile_pic'] = obj.userprofile.profile_pic
         token['is_staff'] = obj.is_staff
         token['id'] = obj.id
         return str(token.access_token)
