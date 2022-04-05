@@ -51,3 +51,18 @@ class LoginView(TokenObtainPairView):
         
         except Exception as e:
             return Response({'message': 'Invalid email or password'}, status=status.HTTP_400_BAD_REQUEST)
+        
+@api_view(['POST'])
+@permission_classes((IsAuthenticated,))
+def logout(request):
+    data = request.data
+    refresh_token = data.get('refresh')
+    try:
+        RefreshToken(refresh_token).blacklist()
+        return Response({'message': 'Logged out successfully'}, status=status.HTTP_200_OK)
+    
+    except TokenError as identifier:
+        return Response({'message': 'Invalid or Expired Token'}, status=status.HTTP_400_BAD_REQUEST)
+    
+    except Exception as e:
+        return Response({'message': 'Something went wrong'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
