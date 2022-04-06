@@ -14,6 +14,14 @@ from .models import CustomUser
 # Create your views here.
 
 class RegisterView(CreateAPIView):
+                    
+    """
+    @desc     Register user via api
+    @route    Post /api/v1/user/auth/register
+    @access   Public
+    @return   Json
+    """
+    
     serializer_class = RegisterSerializer
     permission_classes = (AllowAny,)
     
@@ -28,6 +36,14 @@ class RegisterView(CreateAPIView):
             return Response({'message': 'User created successfully', 'data': user_data}, status=status.HTTP_201_CREATED)
         
 class LoginView(TokenObtainPairView):
+                        
+    """
+    @desc     Login user via api
+    @route    Post /api/v1/user/auth/login
+    @access   Public
+    @return   Json
+    """
+    
     serializer_class = LoginSerializerWithToken
     
     def post(self, request):
@@ -46,6 +62,14 @@ class LoginView(TokenObtainPairView):
 @api_view(['POST'])
 @permission_classes((IsAuthenticated,))
 def logout(request):
+                        
+    """
+    @desc     Logout user via api
+    @route    Post /api/v1/user/auth/logout
+    @access   Private
+    @return   Json
+    """
+    
     data = request.data
     refresh_token = data.get('refresh')
     try:
@@ -60,6 +84,14 @@ def logout(request):
     
 @api_view(['GET'])
 def get_users(request):
+                        
+    """
+    @desc     Get all users via api
+    @route    Get /api/v1/user/all
+    @access   Public
+    @return   Json
+    """
+    
     query = request.query_params.get('q') or ''
     try:
         users = CustomUser.objects.filter(username__icontains=query)
@@ -76,6 +108,14 @@ def get_users(request):
 @api_view(['GET'])
 @permission_classes((IsAuthenticated,))
 def get_current_user(request):
+                        
+    """
+    @desc     Get current user via api
+    @route    GET /api/v1/user/profile/current
+    @access   Private
+    @return   Json
+    """
+    
     user = request.user
     print(user)
     try:
