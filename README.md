@@ -46,10 +46,15 @@ Make sure you have Docker and docker-compose installed on your machine.
 #### Steps to start the server
 
 1. Add environment file .env in server directory with the variables fiven in the .env.example file.
-2. Run the following command in the project directory itself.
+2. Run the following command to build the docker containers in the project directory itself.
 
       ```sh
-      docker-compose -f docker/docker-compose.debug.yml up --build
+      docker-compose -f docker/docker-compose.debug.yml build
+      ```
+2. Run the following command to run the docker containers in the project directory itself.
+
+      ```sh
+      docker-compose -f docker/docker-compose.debug.yml up
       ```
 
 3. Open <http://localhost:8000> to view it in the browser.
