@@ -67,7 +67,7 @@ class UserSerializer(serializers.ModelSerializer):
 class PostUserSerializer(serializers.ModelSerializer):
     class Meta:
         model = CustomUser
-        exclude = ['username', 'email']
+        exclude = ['username', 'email', 'password', 'is_superuser', 'is_staff', 'is_active']
 
     
 class UserSerializerWithToken(UserSerializer):
