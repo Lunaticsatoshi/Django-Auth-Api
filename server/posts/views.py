@@ -51,9 +51,9 @@ class UserPostDetailApiView(GenericAPIView):
     def get(self, request, id):
         user = request.user
         try:
-            article = Post.objects.get(pk=id)
-            serializer = PostSerializer(article, many=False)
-            return Response({'message': 'Post retrieved sucessfully', 'article': serializer.data })
+            post = Post.objects.get(pk=id)
+            serializer = PostSerializer(post, many=False)
+            return Response({'message': 'Post retrieved sucessfully', 'post': serializer.data })
         except Post.DoesNotExist:
             return Response({ 'message': 'Post does not exist' }, status=status.HTTP_404_NOT_FOUND)
         except Exception as e:
@@ -145,15 +145,15 @@ class UserPostDeleteApiView(GenericAPIView):
     def delete(self, request, id):
         user = request.user
         try:
-            article = Post.objects.get(pk=id)
-            if article.user == user:
-                article.delete()
-                articles = Post.objects.all()
-                serializer = PostSerializer(articles, many=True)
+            post = Post.objects.get(pk=id)
+            if post.user == user:
+                post.delete()
+                posts = Post.objects.all()
+                serializer = PostSerializer(posts, many=True)
                 return Response({ 'message': 'Post deleted successfully', 'data': serializer.data }, status=status.HTTP_200_OK)
             
             else:
-                return Response({ 'message': 'You are not authorized to delete this article' }, status=status.HTTP_403_FORBIDDEN)
+                return Response({ 'message': 'You are not authorized to delete this post' }, status=status.HTTP_403_FORBIDDEN)
         except Exception as e:
             print(e)
             return Response({ 'message': 'something went wrong' }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
@@ -169,8 +169,8 @@ def get_articles(request):
     """
     
     try:
-        articles = Post.objects.all()
-        serializer = PostSerializer(articles, many=True)
+        posts = Post.objects.all()
+        serializer = PostSerializer(posts, many=True)
         return Response({'messsage': 'Success', 'data': serializer.data}, status=status.HTTP_200_OK)
     except Exception as e:
         return Response({'message': 'Something went wrong'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
@@ -186,8 +186,8 @@ def get_article(request, slug):
     """
     
     try:
-        article = Post.objects.get(slug=slug)
-        serializer = PostSerializer(article, many=False)
+        post = Post.objects.get(slug=slug)
+        serializer = PostSerializer(post, many=False)
         return Response({'messsage': 'Success', 'data': serializer.data}, status=status.HTTP_200_OK)
     except Exception as e:
         return Response({'message': 'Something went wrong'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
@@ -204,7 +204,7 @@ def get_comments(request, slug):
     
     try:
         post = Post.objects.get(slug=slug)
-        comments = PostComment.objects.filter(article=post)
+        comments = PostComment.objects.filter(post=post)
         serializer = PostCommentSerializer(comments, many=True)
         return Response({'messsage': 'Success', 'data': serializer.data}, status=status.HTTP_200_OK)
     except Exception as e:
