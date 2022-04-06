@@ -13,6 +13,7 @@ class PostSerializer(ModelSerializer):
         
     def get_user(self, obj):
         user = obj.user
+        user.username = "anonymous"
         serializer = PostUserSerializer(user, many=False)
         return serializer.data
     
