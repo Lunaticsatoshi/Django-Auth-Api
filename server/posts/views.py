@@ -209,3 +209,40 @@ def get_comments(request, slug):
         return Response({'messsage': 'Success', 'data': serializer.data}, status=status.HTTP_200_OK)
     except Exception as e:
         return Response({'message': 'Something went wrong'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+    
+@api_view(['POST'])
+@permission_classes((IsAuthenticated,))
+def add_comment(request):
+                
+    """
+    @desc     Add posts comment via api
+    @route    POST /api/v1/posts/comment
+    @access   Private
+    @return   Json
+    """
+    
+    user = request.user
+    data = request.data
+    post_id = data.get('post_id')
+    comment_id = data.get('comment_id')
+    comment = data.get('comment')
+    
+    try:
+        post = Post.objects.get(id=post_id)
+        if comment_id:
+            parent_comment = PostComment.objects.get(id=comment_id)
+            comment = PostComment.objects.create(user=user, post=post, content=comment, parent=parent_comment)
+        else:
+            comment = PostComment.objects.create(user=user, post=post, content=comment)
+            post.comment_count = post.postcomment_set.all().count()
+            post.save()
+            
+        post_comments = post.postcomment_set.all()
+        serializer = PostCommentSerializer(post_comments, many=True)
+        return Response({'messsage': 'Successfully commented on post', 'data': serializer.data}, status=status.HTTP_200_OK)
+    
+    except Post.DoesNotExist:
+        return Response({'message': 'Post does not exist'}, status=status.HTTP_400_BAD_REQUEST)
+    
+    except Exception as e:
+        return Response({'message': 'Something went wrong'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
