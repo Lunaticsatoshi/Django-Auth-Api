@@ -159,7 +159,7 @@ class UserPostDeleteApiView(GenericAPIView):
             return Response({ 'message': 'something went wrong' }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
         
 @api_view(['GET'])
-def get_articles(request):
+def get_posts(request):
         
     """
     @desc     Get all posts via api
@@ -176,7 +176,7 @@ def get_articles(request):
         return Response({'message': 'Something went wrong'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
     
 @api_view(['GET'])
-def get_article(request, slug):
+def get_post(request, slug):
             
     """
     @desc     Get posts by slug via api
