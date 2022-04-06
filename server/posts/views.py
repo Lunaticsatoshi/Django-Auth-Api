@@ -35,7 +35,7 @@ class UserPostListApiView(GenericAPIView):
         except Exception as e:
             return Response({'message': 'Something went wrong'}, status=status.HTTP_400_BAD_REQUEST)
         
-class UserArticleDetailApiView(GenericAPIView):
+class UserPostDetailApiView(GenericAPIView):
         
     """
     @desc     Get user post by id via api
