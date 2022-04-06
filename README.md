@@ -9,8 +9,8 @@
 ## Features
 
 * [x] Register as a User
-* [ ] Create posts anonymously
-* [ ] Comment on posts
+* [x] Create posts anonymously
+* [x] Comment on posts
 
 ### 🏗️ Built With
 
