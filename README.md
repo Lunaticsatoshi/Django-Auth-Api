@@ -32,7 +32,7 @@ To get a local copy up and running follow these simple steps.
 1. Clone the repository using the following command
 
 ```bash
-git clone https://github.com/Lunaticsatoshi/django-auth-api.git
+git clone https://github.com/Lunaticsatoshi/Django-Auth-Api.git
 # After cloning, move into the directory having the project files using the change directory command
 cd django-auth-api
 ```
