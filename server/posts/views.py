@@ -174,3 +174,38 @@ def get_articles(request):
         return Response({'messsage': 'Success', 'data': serializer.data}, status=status.HTTP_200_OK)
     except Exception as e:
         return Response({'message': 'Something went wrong'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+    
+@api_view(['GET'])
+def get_article(request, slug):
+            
+    """
+    @desc     Get posts by slug via api
+    @route    GET /api/v1/posts/:slug
+    @access   Public
+    @return   Json
+    """
+    
+    try:
+        article = Post.objects.get(slug=slug)
+        serializer = PostSerializer(article, many=False)
+        return Response({'messsage': 'Success', 'data': serializer.data}, status=status.HTTP_200_OK)
+    except Exception as e:
+        return Response({'message': 'Something went wrong'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+    
+@api_view(['GET'])
+def get_comments(request, slug):
+                
+    """
+    @desc     Get all post comments via api
+    @route    GET /api/v1/posts/:slug/comments
+    @access   Public
+    @return   Json
+    """
+    
+    try:
+        post = Post.objects.get(slug=slug)
+        comments = PostComment.objects.filter(article=post)
+        serializer = PostCommentSerializer(comments, many=True)
+        return Response({'messsage': 'Success', 'data': serializer.data}, status=status.HTTP_200_OK)
+    except Exception as e:
+        return Response({'message': 'Something went wrong'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
