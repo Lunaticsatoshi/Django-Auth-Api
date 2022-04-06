@@ -35,6 +35,30 @@ class UserPostListApiView(GenericAPIView):
         except Exception as e:
             return Response({'message': 'Something went wrong'}, status=status.HTTP_400_BAD_REQUEST)
         
+class UserArticleDetailApiView(GenericAPIView):
+        
+    """
+    @desc     Get user post by id via api
+    @route    GET /api/v1/post/user/id
+    @access   Private
+    @return   Json
+    """
+    
+    serializer_class = PostSerializer
+    queryset = Post.objects.all()
+    permission_classes = (IsAuthenticated, IsOwner)
+    
+    def get(self, request, id):
+        user = request.user
+        try:
+            article = Post.objects.get(pk=id)
+            serializer = PostSerializer(article, many=False)
+            return Response({'message': 'Post retrieved sucessfully', 'article': serializer.data })
+        except Post.DoesNotExist:
+            return Response({ 'message': 'Post does not exist' }, status=status.HTTP_404_NOT_FOUND)
+        except Exception as e:
+            return Response({ 'message': 'Something went wrong' }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        
 class UserPostCreateApiView(GenericAPIView):
     
     """
