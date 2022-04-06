@@ -69,7 +69,7 @@ class UserPostCreateApiView(GenericAPIView):
             print(e)
             return Response({ 'message': 'Something went wrong' }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
         
-class UserArticleUpdateApiView(GenericAPIView):
+class UserPostUpdateApiView(GenericAPIView):
     
     """
     @desc     Update user posts via api
