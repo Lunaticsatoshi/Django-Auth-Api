@@ -97,7 +97,7 @@ class UserPostUpdateApiView(GenericAPIView):
     
     """
     @desc     Update user posts via api
-    @route    PUT /api/v1/posts/update
+    @route    PUT /api/v1/posts/:id/update
     @access   Private
     @return   Json
     """
@@ -135,7 +135,7 @@ class UserPostDeleteApiView(GenericAPIView):
         
     """
     @desc     Delete user posts via api
-    @route    DLETE /api/v1/posts/delete
+    @route    DLETE /api/v1/posts/:id/delete
     @access   Private
     @return   Json
     """
@@ -157,3 +157,20 @@ class UserPostDeleteApiView(GenericAPIView):
         except Exception as e:
             print(e)
             return Response({ 'message': 'something went wrong' }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        
+@api_view(['GET'])
+def get_articles(request):
+        
+    """
+    @desc     Get all posts via api
+    @route    GET /api/v1/posts/all
+    @access   Public
+    @return   Json
+    """
+    
+    try:
+        articles = Post.objects.all()
+        serializer = PostSerializer(articles, many=True)
+        return Response({'messsage': 'Success', 'data': serializer.data}, status=status.HTTP_200_OK)
+    except Exception as e:
+        return Response({'message': 'Something went wrong'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
