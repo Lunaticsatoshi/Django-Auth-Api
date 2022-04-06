@@ -130,3 +130,30 @@ class UserPostUpdateApiView(GenericAPIView):
         except Exception as e:
             print(e)
             return Response({ 'message': 'Something went wrong' }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        
+class UserPostDeleteApiView(GenericAPIView):
+        
+    """
+    @desc     Delete user posts via api
+    @route    DLETE /api/v1/posts/delete
+    @access   Private
+    @return   Json
+    """
+    
+    serializer_class = PostSerializer
+    permission_classes = (IsAuthenticated, IsOwner)
+    def delete(self, request, id):
+        user = request.user
+        try:
+            article = Post.objects.get(pk=id)
+            if article.user == user:
+                article.delete()
+                articles = Post.objects.all()
+                serializer = PostSerializer(articles, many=True)
+                return Response({ 'message': 'Post deleted successfully', 'data': serializer.data }, status=status.HTTP_200_OK)
+            
+            else:
+                return Response({ 'message': 'You are not authorized to delete this article' }, status=status.HTTP_403_FORBIDDEN)
+        except Exception as e:
+            print(e)
+            return Response({ 'message': 'something went wrong' }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
