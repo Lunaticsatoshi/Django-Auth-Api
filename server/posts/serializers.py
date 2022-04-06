@@ -1,7 +1,7 @@
 from rest_framework import serializers
 from rest_framework.serializers import ModelSerializer
 
-from users.serializers import UserSerializer
+from users.serializers import PostUserSerializer
 from .models import Post, PostComment
 
 
@@ -13,7 +13,7 @@ class PostSerializer(ModelSerializer):
         
     def get_user(self, obj):
         user = obj.user
-        serializer = UserSerializer(user, many=False)
+        serializer = PostUserSerializer(user, many=False)
         return serializer.data
     
 class PostCommentSerializer(ModelSerializer):
@@ -24,5 +24,5 @@ class PostCommentSerializer(ModelSerializer):
         
     def get_user(self, obj):
         user = obj.user
-        serializer = UserSerializer(user, many=False)
+        serializer = PostUserSerializer(user, many=False)
         return serializer.data
